@@ -27,7 +27,7 @@ namespace AvtoNetScraper
         protected HtmlDocument GetHtmlDocument(string url)
         {
             var interval = GetRandomRequestInterval();
-            Colorful.Console.WriteLine($"Sleeping for {interval.Milliseconds} ms...", Color.Red);
+            Colorful.Console.WriteLine($"Sleeping for {interval.TotalMilliseconds} ms...", Color.Red);
             Thread.Sleep(interval);
 
             using var client = new WebClient();
