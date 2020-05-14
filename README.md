@@ -8,6 +8,6 @@ Before you can run this project you will need these:
 
 Go to project directory and run commands: 
 1. `dotnet restore` - this will restore all project packages
-2. `dotnet ef database update` - this will create a local sqlite database file
+2. `dotnet ef database update` - this will create a local sqlite database file, make sure the build action is set to copy to output directory
 3. `dotnet run` - this will run the console application and fill up your local sqlite database
 
