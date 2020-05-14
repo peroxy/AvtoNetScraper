@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using AvtoNetScraper.Utilities;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

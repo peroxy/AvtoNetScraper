@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AvtoNetScraper
+namespace AvtoNetScraper.Utilities
 {
-    static class Extensions
+    public static class Extensions
     {
         public static string GetUntilOrEmpty(this string text, string stopAt)
         {

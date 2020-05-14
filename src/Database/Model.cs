@@ -8,8 +8,9 @@ namespace AvtoNetScraper.Database
     public class CarsContext : DbContext
     {
         public DbSet<Url> Urls { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=cars.db");
+            => options.UseSqlite("Data Source=Database\\cars.db");
     }
 
     public class Url
