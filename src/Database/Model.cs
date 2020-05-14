@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AvtoNetScraper
+namespace AvtoNetScraper.Database
 {
     public class CarsContext : DbContext
     {

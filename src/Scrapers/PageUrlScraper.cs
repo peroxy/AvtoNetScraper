@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 
-namespace AvtoNetScraper
+namespace AvtoNetScraper.Scrapers
 {
     /// <summary>
     /// Scrapes all car urls from all pages

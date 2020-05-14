@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AvtoNetScraper
+namespace AvtoNetScraper.Database
 {
     public class CarsDbHelper
     {

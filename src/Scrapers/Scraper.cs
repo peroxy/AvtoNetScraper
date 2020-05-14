@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 
-namespace AvtoNetScraper
+namespace AvtoNetScraper.Scrapers
 {
     public abstract class Scraper
     {

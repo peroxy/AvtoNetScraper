@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AvtoNetScraper.Database;
+using AvtoNetScraper.Scrapers;
+using AvtoNetScraper.Settings;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Drawing;
 using System.IO;
@@ -10,7 +13,7 @@ namespace AvtoNetScraper
     {
         private static IConfiguration Configuration => new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile("Settings\\appsettings.json", optional: false)
     .Build();
 
         private static void Main(string[] args)

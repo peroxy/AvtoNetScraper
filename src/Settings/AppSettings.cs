@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AvtoNetScraper
+namespace AvtoNetScraper.Settings
 {
     public class AppSettings
     {
