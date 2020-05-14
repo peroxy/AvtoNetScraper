@@ -1,10 +1,17 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 
 namespace AvtoNetScraper
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+
+        private static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
         }
