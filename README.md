@@ -11,6 +11,8 @@ Before you can run this project you will need these:
 ### Setting up config
 Open `appsettings.template.json` and setup custom urls and request intervals in milliseconds. URL values should be copied from avto.net after you have specified search filters. After you are done customizing the file, rename or save it as `appsettings.json`.
 
+Please be aware of avto.net limitation that only shows a maximum of 1000 car ads in their search - even if more should be included in the filter. It is suggested to limit your search in those cases to be always under 1000 or they won't get scraped.
+
 ### Restoring packages and database
 Go to project directory and run commands: 
 1. `dotnet restore` - this will restore all project packages
