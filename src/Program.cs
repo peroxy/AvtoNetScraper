@@ -61,31 +61,38 @@ namespace AvtoNetScraper
                 var urls = scraper.GetCarUrls();
                 Colorful.Console.WriteLine($"Finished scraping car urls, got {urls.Count} urls.", Color.GreenYellow);
                 
-                Colorful.Console.WriteLine($"Merging them into database...", Color.LightSkyBlue);
                 _dbHelper.MergeUrls(urls);
+                Colorful.Console.WriteLine($"Merged {urls.Count} into database.", Color.LightSkyBlue);
             }
         }
 
         private static void ScrapeCarInfo(AppSettings settings)
         {
-
             var nonScrapedUrls = _dbHelper.GetNonScrapedUrls();
-
-            //TODO: remove after getting all attributes for model, we just use this to get a lot of random attributes fast
-            nonScrapedUrls.Shuffle(new Random());
 
             Colorful.Console.WriteLine($"Downloading non-scraped car data for {nonScrapedUrls.Count} remaining urls.", Color.Orange);
 
             var interval = TimeSpan.FromMilliseconds(settings.RequestIntervalMs);
-            var allAttributes = new HashSet<string>();
-            foreach (var url in nonScrapedUrls.Take(1000))
-            {
-                var scraper = new CarScraper(url.Address, interval);
-                var attributes = scraper.GetCarAttributes();
-                allAttributes.UnionWith(attributes);
-            }
 
-            File.WriteAllText("attributes.txt", string.Join(Environment.NewLine, allAttributes));
+            // we use batching to avoid losing progress
+            foreach (var batch in nonScrapedUrls.Batch(5))
+            {
+                var cars = new List<Car>();
+
+                Colorful.Console.WriteLine($"Start scraping batch of cars...", Color.GreenYellow);
+                foreach (var url in batch)
+                {
+                    var scraper = new CarScraper(url, interval);
+                    var car = scraper.ScrapeCarInformation();
+                    if (car != null)
+                    {
+                        cars.Add(car);
+                    }
+                }
+
+                _dbHelper.InsertCars(cars);
+                Colorful.Console.WriteLine($"Inserted {cars.Count} cars from batch into database...", Color.SkyBlue);
+            }
         }
     }
 }

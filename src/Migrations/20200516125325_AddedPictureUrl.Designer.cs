@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AvtoNetScraper.Migrations
 {
     [DbContext(typeof(CarsContext))]
-    [Migration("20200516083649_AddedCarAttributes")]
-    partial class AddedCarAttributes
+    [Migration("20200516125325_AddedPictureUrl")]
+    partial class AddedPictureUrl
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,6 +48,9 @@ namespace AvtoNetScraper.Migrations
                     b.Property<string>("CombinedConsumption")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("DoorNumber")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("EmissionClass")
                         .HasColumnType("TEXT");
 
@@ -69,10 +72,10 @@ namespace AvtoNetScraper.Migrations
                     b.Property<int?>("MileageInKm")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("NumberOfDoors")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("OutOfTownConsumption")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PictureUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal?>("Price")
@@ -90,12 +93,10 @@ namespace AvtoNetScraper.Migrations
                     b.Property<string>("Transmission")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UrlId")
+                    b.Property<int>("UrlId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UrlId");
 
                     b.ToTable("Cars");
                 });
@@ -112,13 +113,6 @@ namespace AvtoNetScraper.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Urls");
-                });
-
-            modelBuilder.Entity("AvtoNetScraper.Database.Car", b =>
-                {
-                    b.HasOne("AvtoNetScraper.Database.Url", "Url")
-                        .WithMany()
-                        .HasForeignKey("UrlId");
                 });
 #pragma warning restore 612, 618
         }

@@ -31,10 +31,20 @@ namespace AvtoNetScraper.Database
         {
             using (var db = new CarsContext())
             {
-                var alreadyScrapedUrls = new HashSet<int>(db.Cars.Select(x => x.Url.Id));
+                var alreadyScrapedUrls = new HashSet<int>(db.Cars.Select(x => x.UrlId));
                 var nonScrapedUrls = db.Urls.Where(x => !alreadyScrapedUrls.Contains(x.Id)).ToList();
                 return nonScrapedUrls;
             }
+        }
+
+        public void InsertCars(IList<Car> cars)
+        {
+            using (var db = new CarsContext())
+            {
+                db.Cars.AddRange(cars);
+                db.SaveChanges();
+            }
+
         }
     }
 }

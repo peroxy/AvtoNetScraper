@@ -28,7 +28,7 @@ namespace AvtoNetScraper.Database
         /// </summary>
         public int Id { get; set; }
 
-        public Url Url { get; set; }
+        public int UrlId { get; set; }
         public string Age { get; set; }
         public DateTime? FirstRegistration { get; set; }
         public DateTime? TechnicalInspectionValidUntil { get; set; }
@@ -39,7 +39,7 @@ namespace AvtoNetScraper.Database
         public decimal? Price { get; set; }
         public string Transmission { get; set; }
         public string BodyShape { get; set; }
-        public int NumberOfDoors { get; set; }
+        public int? DoorNumber { get; set; }
         public string Color { get; set; }
         public string Interior { get; set; }
         public string ChassisNumber { get; set; }
@@ -51,6 +51,7 @@ namespace AvtoNetScraper.Database
         public string CO2Emissions { get; set; }
         public string InternalNumber { get; set; }
         public string StockStatus { get; set; }
+        public string PictureUrl { get; set; }
     }
 
 }
