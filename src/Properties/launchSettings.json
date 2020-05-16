@@ -1,8 +1,7 @@
 {
   "profiles": {
     "AvtoNetScraper": {
-      "commandName": "Project",
-      "commandLineArgs": "-cars"
+      "commandName": "Project"
     }
   }
 }
