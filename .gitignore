@@ -352,3 +352,4 @@ MigrationBackup/
 # Project specific
 appsettings.json
 *.db
+/src/Properties/launchSettings.json
