@@ -31,4 +31,5 @@ Modify Database/Model.cs file and run commands:
 1. `dotnet ef migrations add Changelog`
 2. `dotnet ef database update`
 
-
+### TODO
+- car picture downloader for photo analysis
