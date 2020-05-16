@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Schema;
 
 namespace AvtoNetScraper.Utilities
 {
@@ -19,6 +20,24 @@ namespace AvtoNetScraper.Utilities
             }
 
             return string.Empty;
+        }
+
+        public static string ToLongString(this TimeSpan span)
+        {
+            if (span.Days > 1)
+            {
+                return $"{span.Days : 0} days, {span.Hours : 0} hours, {span.Minutes : 0} minutes, {span.Seconds}";
+            }
+            if (span.TotalHours > 1)
+            {
+                return $"{span.Hours: 0} hours, {span.Minutes: 0} minutes, {span.Seconds: 0} seconds";
+            }
+            if (span.TotalMinutes > 1)
+            {
+                return $"{span.Minutes: 0} minutes, {span.Seconds: 0} seconds";
+            }
+                
+            return $"{span.Seconds: 0} seconds";
         }
 
         /// <summary>

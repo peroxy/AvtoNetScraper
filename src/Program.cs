@@ -5,6 +5,7 @@ using AvtoNetScraper.Utilities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -74,12 +75,14 @@ namespace AvtoNetScraper
 
             var interval = TimeSpan.FromMilliseconds(settings.RequestIntervalMs);
 
+            int progress = 0;
             // we use batching to avoid losing progress
-            foreach (var batch in nonScrapedUrls.Batch(5))
+            foreach (var batch in nonScrapedUrls.Batch(50))
             {
                 var cars = new List<Car>();
 
                 Colorful.Console.WriteLine($"Start scraping batch of cars...", Color.GreenYellow);
+
                 foreach (var url in batch)
                 {
                     var scraper = new CarScraper(url, interval);
@@ -88,6 +91,7 @@ namespace AvtoNetScraper
                     {
                         cars.Add(car);
                     }
+                    Console.Title = $"Scraped {++progress} / {nonScrapedUrls.Count} car urls ({(double)progress / nonScrapedUrls.Count:P2}). Remaining time:{TimeSpan.FromMilliseconds((nonScrapedUrls.Count - progress)*150).ToLongString()}).";
                 }
 
                 _dbHelper.InsertCars(cars);
