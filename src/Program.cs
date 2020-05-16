@@ -91,7 +91,7 @@ namespace AvtoNetScraper
                     {
                         cars.Add(car);
                     }
-                    Console.Title = $"Scraped {++progress} / {nonScrapedUrls.Count} car urls ({(double)progress / nonScrapedUrls.Count:P2}). Remaining time:{TimeSpan.FromMilliseconds((nonScrapedUrls.Count - progress)*150).ToLongString()}).";
+                    Console.Title = $"Scraped {++progress} / {nonScrapedUrls.Count} car urls ({(double)progress / nonScrapedUrls.Count:P2}). Remaining time:{TimeSpan.FromMilliseconds((nonScrapedUrls.Count - progress)*150).ToLongString()}.";
                 }
 
                 _dbHelper.InsertCars(cars);
