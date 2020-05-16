@@ -1,5 +1,6 @@
 # AvtoNetScraper
-Scrapes car information from Slovenian car website [AVTO.NET](https://avto.net) and stores it into a local sqlite database.
+Scrapes car information from Slovenian car website [AVTO.NET](https://avto.net) and stores it into a local sqlite database. 
+This was developed to store all avto.net car ads into a database and analyze them. This is not meant to be used when buying a car and getting notifications when a new car pops up. It can definitely be modified and made to be used for that purpose though.
 
 ## How to run
 ### Requirements
@@ -22,5 +23,10 @@ Optional arguments:
 2. `dotnet run -- -cars` - will read the `Url` table from local database and make a request to each car url and parse each car's info into database
 3. `dotnet run -- -urls -cars` - this will perform both actions as described above - this is the default behavior if you run the application without any arguments
 
+## Development
+### Updating database model
+Modify Database/Model.cs file and run commands:
+1. `dotnet ef migrations add Changelog`
+2. `dotnet ef database update`
 
 
