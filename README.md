@@ -1,6 +1,6 @@
 # AvtoNetScraper
 Scrapes car information from Slovenian car website [AVTO.NET](https://avto.net) and stores it into a local sqlite database. 
-This was developed to store all avto.net car ads into a database and analyze them. This is not meant to be used when buying a car and getting notifications when a new car pops up. It can definitely be modified and made to be used for that purpose though.
+This was developed to store all avto.net car ads into a database and analyze them. This was not meant to be used when buying a car and getting notifications when a new car pops up. It can definitely be modified and made to be used for that purpose though.
 
 ## How to run
 ### Requirements
