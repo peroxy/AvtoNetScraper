@@ -30,6 +30,12 @@ namespace AvtoNetScraper.Scrapers
             //initial page download
             var doc = GetHtmlDocument(Url);
 
+            if (doc == null)
+            {
+                //url has been removed.. nothing exists
+                return new string[0];
+            }
+
             //try to find "Zadetki 433 - 480 od skupno 486" text
             var resultsNode = doc.DocumentNode.Descendants().FirstOrDefault(x => x.HasClass("ResultsSelectedCriteriaLeft"));
             if (resultsNode == null)
@@ -57,6 +63,13 @@ namespace AvtoNetScraper.Scrapers
             {
                 string currentPageUrl = Url.Replace("&stran=1", $"&stran={i}");
                 var currentPageDoc = GetHtmlDocument(currentPageUrl);
+                
+                if (currentPageDoc == null)
+                {
+                    //url has been removed.. nothing exists
+                    return new string[0];
+                }
+
                 var currentPageUrls = FindUrlNodes(currentPageDoc);
                 carUrls.AddRange(currentPageUrls);
             }
@@ -72,7 +85,7 @@ namespace AvtoNetScraper.Scrapers
                 return new string[0];
             }
 
-            return urlNodes.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => $"https://www.avto.net{x.GetUntilOrEmpty("&display=").Substring(2)}").ToArray();
+            return urlNodes.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => $"https://www.avto.net{x.GetUntilOrEmpty("&display=").Substring(2)}").ToList();
         }
 
     }

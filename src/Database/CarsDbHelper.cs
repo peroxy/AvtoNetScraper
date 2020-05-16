@@ -22,5 +22,19 @@ namespace AvtoNetScraper.Database
                 db.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// Returns all urls that have not been yet scraped and inserted into cars table.
+        /// </summary>
+        /// <returns></returns>
+        public IList<Url> GetNonScrapedUrls()
+        {
+            using (var db = new CarsContext())
+            {
+                var alreadyScrapedUrls = new HashSet<int>(db.Cars.Select(x => x.Url.Id));
+                var nonScrapedUrls = db.Urls.Where(x => !alreadyScrapedUrls.Contains(x.Id)).ToList();
+                return nonScrapedUrls;
+            }
+        }
     }
 }
