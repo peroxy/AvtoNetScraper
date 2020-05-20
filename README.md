@@ -19,6 +19,7 @@ Here is an example of appsettings.json file:
 {
   "appSettings": {
     "searchFilterUrls": [
+      "https://www.avto.net/Ads/results.asp?znamka=Ford&model=&modelID=&tip=katerikoli%20tip&znamka2=&model2=&tip2=katerikoli%20tip&znamka3=&model3=&tip3=katerikoli%20tip&cenaMin=0&cenaMax=999999&letnikMin=0&letnikMax=2090&bencin=0&starost2=999&oblika=0&ccmMin=0&ccmMax=99999&mocMin=&mocMax=&kmMin=0&kmMax=9999999&kwMin=0&kwMax=999&motortakt=&motorvalji=&lokacija=0&sirina=&dolzina=&dolzinaMIN=&dolzinaMAX=&nosilnostMIN=&nosilnostMAX=&lezisc=&presek=&premer=&col=&vijakov=&EToznaka=&vozilo=&airbag=&barva=&barvaint=&EQ1=1000000000&EQ2=1000000000&EQ3=1000000000&EQ4=100000000&EQ5=1000000000&EQ6=1000000000&EQ7=1110100120&EQ8=1010000001&EQ9=100000000&KAT=1010000000&PIA=&PIAzero=&PSLO=&akcija=&paketgarancije=&broker=&prikazkategorije=&kategorija=&zaloga=&arhiv=&presort=&tipsort=&stran=",
       "https://www.avto.net/Ads/results.asp?znamka=Ford&model=&modelID=&tip=katerikoli%20tip&znamka2=&model2=&tip2=katerikoli%20tip&znamka3=&model3=&tip3=katerikoli%20tip&cenaMin=0&cenaMax=999999&letnikMin=0&letnikMax=2090&bencin=0&starost2=999&oblika=0&ccmMin=0&ccmMax=99999&mocMin=&mocMax=&kmMin=0&kmMax=9999999&kwMin=0&kwMax=999&motortakt=&motorvalji=&lokacija=0&sirina=&dolzina=&dolzinaMIN=&dolzinaMAX=&nosilnostMIN=&nosilnostMAX=&lezisc=&presek=&premer=&col=&vijakov=&EToznaka=&vozilo=&airbag=&barva=&barvaint=&EQ1=1000000000&EQ2=1000000000&EQ3=1000000000&EQ4=100000000&EQ5=1000000000&EQ6=1000000000&EQ7=1110100120&EQ8=1010000001&EQ9=100000000&KAT=1010000000&PIA=&PIAzero=&PSLO=&akcija=&paketgarancije=&broker=&prikazkategorije=&kategorija=&zaloga=&arhiv=&presort=&tipsort=&stran="
     ],
     "requestIntervalMs": 10000,
@@ -33,12 +34,11 @@ Go to project directory and run commands:
 2. `dotnet ef database update` - this will create a local sqlite database file, make sure the build action is set to copy to output directory
 
 ### Running application
-`dotnet run` - this will run the console application with default configuration and fill up your local sqlite database.
+`dotnet run` - this will run the console application with default configuration (by using `-urls -cars` arguments) and fill up your local sqlite database.
 Optional arguments: 
 1. `dotnet run -- -urls` - will only parse car urls and insert them into database, will not make a request to each url and parse each car's info
 2. `dotnet run -- -cars` - will read the `Url` table from local database and make a request to each car url and parse each car's info into database
-2. `dotnet run -- -images` - will read the `Car` table from local database and make a request to each car url image and download it to a local path specified in appsettings
-3. `dotnet run -- -urls -cars` - this will perform both actions as described above - this is the default behavior if you run the application without any arguments
+3. `dotnet run -- -images` - will read the `Car` table from local database and make a request to each car url image and download it to a local path specified in appsettings
 
 ## Development
 ### Updating database model
