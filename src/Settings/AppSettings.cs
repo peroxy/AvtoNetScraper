@@ -8,5 +8,6 @@ namespace AvtoNetScraper.Settings
     {
         public string[] SearchFilterUrls { get; set; }
         public long RequestIntervalMs { get; set; }
+        public string ImagesDirectory { get; set; }
     }
 }

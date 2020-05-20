@@ -52,6 +52,11 @@ namespace AvtoNetScraper
                 Colorful.Console.WriteLine("-cars option chosen, will scrape car info for all urls in database.", Color.Yellow);
                 ScrapeCarInfo(settings);
             }
+            if (args.Contains("-images"))
+            {
+                Colorful.Console.WriteLine("-images option chosen, will download car ad picture for all urls in database.", Color.Yellow);
+                DownloadCarImages(settings);
+            }
         }
 
         private static void ScrapeCarUrls(AppSettings settings)
@@ -96,6 +101,23 @@ namespace AvtoNetScraper
 
                 _dbHelper.InsertCars(cars);
                 Colorful.Console.WriteLine($"Inserted {cars.Count} cars from batch into database...", Color.SkyBlue);
+            }
+        }
+
+        private static void DownloadCarImages(AppSettings settings)
+        {
+            var cars = _dbHelper.GetCarsWithoutDownloadedImage();
+            var interval = TimeSpan.FromMilliseconds(settings.RequestIntervalMs);
+
+            int progress = 0;
+            foreach (var car in cars)
+            {
+                var scraper = new ImageScraper(car.PictureUrl, interval);
+                var path = scraper.DownloadImage(settings.ImagesDirectory);
+                
+                _dbHelper.UpdateCarImagePath(car, path);
+
+                Console.Title = $"Scraped {++progress} / {cars.Count} car images ({(double)progress / cars.Count:P2}). Remaining time:{TimeSpan.FromMilliseconds((cars.Count - progress) * 150).ToLongString()}.";
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -42,6 +43,37 @@ namespace AvtoNetScraper.Database
             using (var db = new CarsContext())
             {
                 db.Cars.AddRange(cars);
+                db.SaveChanges();
+            }
+        }
+
+        public IList<Car> GetCarsWithoutDownloadedImage()
+        {
+            using (var db = new CarsContext())
+            {
+                var carsWithoutImages = db.Cars.Where(x => x.LocalPicturePath == null && x.PictureUrl != null).ToList();
+                var carsWithImages = db.Cars.Where(x => x.LocalPicturePath != null && x.PictureUrl != null).ToList();
+
+                // check if local files might have been deleted or moved, download for those again
+                foreach (var car in carsWithImages)
+                {
+                    if (!File.Exists(car.LocalPicturePath))
+                    {
+                        carsWithoutImages.Add(car);
+                    }
+                }
+                
+                return carsWithoutImages;
+            }
+        }
+
+        public void UpdateCarImagePath(Car car, string path)
+        {
+            using (var db = new CarsContext())
+            {
+                car.LocalPicturePath = path;
+                db.Attach(car);
+                db.Entry(car).Property(x => x.LocalPicturePath).IsModified = true;
                 db.SaveChanges();
             }
 

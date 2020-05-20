@@ -31,15 +31,7 @@ namespace AvtoNetScraper.Scrapers
         /// <returns></returns>
         protected HtmlDocument GetHtmlDocument(string url)
         {
-            var interval = GetRandomRequestInterval();
-            Colorful.Console.WriteLine($"Sleeping for {interval.TotalMilliseconds} ms...", Color.Red);
-            Thread.Sleep(interval);
-
-            using var client = new WebClient();
-            client.Headers.Add("user-agent", GetRandomUserAgent());
-            client.Encoding = _encoding;
-
-            Colorful.Console.WriteLine($"Downloading {url}...", Color.SkyBlue);
+            using WebClient client = PrepareClient(url);
             string html;
             try
             {
@@ -62,6 +54,19 @@ namespace AvtoNetScraper.Scrapers
             var document = new HtmlDocument();
             document.LoadHtml(html);
             return document;
+        }
+
+        protected WebClient PrepareClient(string url)
+        {
+            var interval = GetRandomRequestInterval();
+            Colorful.Console.WriteLine($"Sleeping for {interval.TotalMilliseconds} ms...", Color.Red);
+            Thread.Sleep(interval);
+            var client = new WebClient();
+            client.Headers.Add("user-agent", GetRandomUserAgent());
+            client.Encoding = _encoding;
+
+            Colorful.Console.WriteLine($"Downloading {url}...", Color.SkyBlue);
+            return client;
         }
 
         /// <summary>

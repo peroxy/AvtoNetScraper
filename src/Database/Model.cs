@@ -52,6 +52,7 @@ namespace AvtoNetScraper.Database
         public string InternalNumber { get; set; }
         public string StockStatus { get; set; }
         public string PictureUrl { get; set; }
+        public string LocalPicturePath { get; set; }
     }
 
 }
