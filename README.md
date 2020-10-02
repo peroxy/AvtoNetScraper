@@ -30,7 +30,7 @@ Here is an example of appsettings.json file:
 
 ### Restoring packages and database
 Go to project directory and run commands: 
-1. `dotnet restore` - this will restore all project packages
+1. `dotnet restore` - this will restore all NuGet project packages
 2. `dotnet ef database update` - this will create a local sqlite database file, make sure the build action is set to copy to output directory
 
 ### Running application
