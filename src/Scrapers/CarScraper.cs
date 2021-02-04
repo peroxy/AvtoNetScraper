@@ -1,9 +1,9 @@
 ﻿using AvtoNetScraper.Database;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
+using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace AvtoNetScraper.Scrapers
 {
@@ -34,22 +34,26 @@ namespace AvtoNetScraper.Scrapers
             {
                 UrlId = _url.Id
             };
+            
+            var priceNode = document.DocumentNode.SelectSingleNode("//comment()[contains(., '-- PRICE --')]/following-sibling::div");
+            var priceText =  priceNode.InnerText.Trim();
 
-            var priceText = document.GetElementbyId("CenaFinanciranja")?.InnerText;
-            if (decimal.TryParse(priceText, NumberStyles.Currency, new CultureInfo("de-DE"), out var price))
+            var price = ReadPrice(priceText);
+            if(price > 0)
             {
                 car.Price = price;
             }
-
-            var photoUrl = document.DocumentNode.Descendants().FirstOrDefault(x => x.HasClass("OglasPhoto"))?.Attributes["data-src"]?.Value;
+            
+            var photoUrl = document.GetElementbyId("BigPhoto")?.Attributes["src"]?.Value;
             car.PictureUrl = photoUrl;
 
-            var attributeNodes = document.DocumentNode.Descendants().Where(x => x.HasClass("OglasData"));
+            var dataNode = document.DocumentNode.SelectSingleNode("//comment()[contains(., '-- DATA --')]/following-sibling::table");
+            var attributeNodes = document.DocumentNode.Descendants().Where(x => x.Name == "tr");
             foreach (var oglasData in attributeNodes)
             {
-                var oglasDataNodes = oglasData.Descendants();
-                var attributeName = oglasDataNodes.FirstOrDefault(x => x.HasClass("OglasDataLeft"));
-                var attributeValue = oglasDataNodes.FirstOrDefault(x => x.HasClass("OglasDataRight"));
+                var oglasDataNodes = oglasData.ChildNodes;
+                var attributeName = oglasDataNodes.FirstOrDefault(x => x.Name == "th");
+                var attributeValue = oglasDataNodes.FirstOrDefault(x => x.Name == "td");
 
                 if (attributeName == null || attributeValue == null)
                 {
@@ -61,6 +65,40 @@ namespace AvtoNetScraper.Scrapers
 
             return car;
 
+        }
+
+        private decimal ReadPrice(string priceText)
+        {
+            var priceRegex = new Regex(@"\d+\.?\d* €");
+            var prices = priceRegex.Matches(priceText);
+
+            try
+            {
+                var parsed = prices.Select(x => decimal.Parse(x.Value, NumberStyles.Currency, new CultureInfo("de-DE")));
+
+                if (parsed.Count() == 1)
+                {
+                    return parsed.First();
+                }
+                else if(prices.Count == 2)
+                {
+                    if(priceText.Contains("export", StringComparison.CurrentCultureIgnoreCase))
+                        return parsed.Max();
+                    
+                    if(priceText.Contains("akcijska cena", StringComparison.CurrentCultureIgnoreCase))
+                        return parsed.Min();
+                }
+                else
+                {
+                   throw new Exception("Unknown price text");
+                }
+            }
+            catch(Exception)
+            {
+                Colorful.Console.WriteLine($"Unable to read price: {priceText}",Color.Red);
+            }
+
+            return 0;
         }
 
         private void SetCarAttribute(Car car, string name, string value)
@@ -89,16 +127,16 @@ namespace AvtoNetScraper.Scrapers
                 case "Motor:":
                     car.Engine = value;
                     break;
-                case "Vrsta goriva:":
+                case "Gorivo:":
                     car.EngineType = value;
                     break;
                 case "Menjalnik:":
                     car.Transmission = value;
                     break;
-                case "Oblika karoserije:":
+                case "Oblika:":
                     car.BodyShape = value;
                     break;
-                case "Število vrat:":
+                case "Št.vrat:":
                     car.DoorNumber = GetInteger(value.Substring(0, 1));
                     break;
                 case "Barva:":
@@ -141,7 +179,7 @@ namespace AvtoNetScraper.Scrapers
 
         private DateTime? GetDateTime(string value)
         {
-            if (DateTime.TryParseExact(value, new[] { "M / yyyy", "M/yyyy" }, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
+            if (DateTime.TryParseExact(value.Trim(), new[] { "M / yyyy", "yyyy / M", "M/yyyy" }, CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
             {
                 return result;
             }

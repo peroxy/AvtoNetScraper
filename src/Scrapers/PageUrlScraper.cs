@@ -36,33 +36,14 @@ namespace AvtoNetScraper.Scrapers
                 return new string[0];
             }
 
-            //try to find "Zadetki 433 - 480 od skupno 486" text
-            var resultsNode = doc.DocumentNode.Descendants().FirstOrDefault(x => x.HasClass("ResultsSelectedCriteriaLeft"));
-            if (resultsNode == null)
+            var currentPageDoc = doc;
+            int pageNum = 1;
+            do
             {
-                // couldn't find the text and can't proceed, we don't know how many pages to crawl
-                return new string[0];
-            }
-
-            var resultsText = resultsNode.InnerText.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
-            if (!int.TryParse(resultsText, out int resultsCount))
-            {
-                // couldn't find number of results on page
-                return new string[0];
-            }
-
-            // each avto.net page has max 48 results
-            int endPage = (int)Math.Ceiling((double)resultsCount / 48);
-
-            Colorful.Console.WriteLine($"Found {resultsCount} cars on {endPage} pages. Crawling all pages to find all car urls now...", Color.Green);
-
-            var initialPageUrls = FindUrlNodes(doc);
-            carUrls.AddRange(initialPageUrls);
-
-            for (int i = 2; i <= endPage; i++)
-            {
-                string currentPageUrl = Url.Replace("&stran=1", $"&stran={i}");
-                var currentPageDoc = GetHtmlDocument(currentPageUrl);
+                Colorful.Console.WriteLine($"Parsing page {pageNum}...", Color.Green);
+                
+                string currentPageUrl = Url.Replace("&stran=1", $"&stran={pageNum}");
+                currentPageDoc = GetHtmlDocument(currentPageUrl);
                 
                 if (currentPageDoc == null)
                 {
@@ -71,21 +52,46 @@ namespace AvtoNetScraper.Scrapers
                 }
 
                 var currentPageUrls = FindUrlNodes(currentPageDoc);
+
+                Colorful.Console.WriteLine($"Found {currentPageUrls.Count} ads.", Color.Green);
+
                 carUrls.AddRange(currentPageUrls);
-            }
+                pageNum++;
+
+            }while(!IsLastPage(currentPageDoc));
+
+            Colorful.Console.WriteLine($"Found {carUrls.Count} cars on {pageNum - 1} pages.", Color.Green);
+
 
             return carUrls;
         }
 
+        private bool IsLastPage(HtmlDocument doc){
+            var nextButton = doc.DocumentNode.Descendants()
+                .FirstOrDefault(x => x.Name == "span" && x.InnerText == "Naprej");
+
+            //No 'Next' button probably means that all results are listed on one page.
+            if(nextButton == null)
+                return true;
+            
+            //We are on last page when 'next' button is disabled
+            return nextButton
+                .ParentNode
+                .ParentNode
+                .HasClass("disabled");
+        }
+
         private IList<string> FindUrlNodes(HtmlDocument document)
         {
-            var urlNodes = document.DocumentNode.Descendants().Where(x => x.HasClass("Adlink"))?.Select(x => x.Attributes["href"]?.Value);
+            var urlNodes = document.DocumentNode.Descendants().Where(x => x.HasClass("stretched-link"))?.Select(x => x.Attributes["href"]?.Value);
             if (urlNodes == null || urlNodes.Count() == 0)
             {
                 return new string[0];
             }
 
-            return urlNodes.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => $"https://www.avto.net{x.GetUntilOrEmpty("&display=").Substring(2)}").ToList();
+            return urlNodes.Where(x => !string.IsNullOrWhiteSpace(x))
+                .Where(x => x.Contains("&display="))
+                .Select(x => $"https://www.avto.net{x.GetUntilOrEmpty("&display=").Substring(2)}").ToList();
         }
 
     }
